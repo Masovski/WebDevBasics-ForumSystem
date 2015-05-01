@@ -13,6 +13,7 @@ abstract class BaseController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->isPost = true;
         }
+
         $this->onInit();
     }
 
@@ -68,11 +69,19 @@ abstract class BaseController {
         array_push($_SESSION['messages'], array('text' => $msg, 'type' => $type));
     }
 
+    function showMessages() {
+        // TODO: Implement later using noty.
+    }
+
     function addInfoMessage($msg) {
         $this->addMessage($msg, 'info');
     }
 
     function addErrorMessage($msg) {
         $this->addMessage($msg, 'error');
+    }
+
+    function addSuccessMessage($msg) {
+        $this->addMessage($msg, 'success');
     }
 }

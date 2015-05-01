@@ -42,15 +42,17 @@ class QuestionsModel extends BaseModel {
     }
 
     public function createQuestion($title, $content, $owner_id, $category_id) {
+        $currentDateTime = date("c");
         $statement = self::$db->prepare(
             "INSERT INTO questions (title, content, owner_id, category_id, created_at)
             VALUES (?, ?, ?, ?, ?)");
         $statement->bind_param(
+            "ssiis",
             $title,
             $content,
             $owner_id,
             $category_id,
-            date("c")
+            $currentDateTime
         );
         $statement->execute();
         return $statement->affected_rows > 0;

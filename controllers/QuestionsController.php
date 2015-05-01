@@ -20,10 +20,19 @@ class QuestionsController extends BaseController {
 
     public function create() {
         if ($this->isPost) {
-            // TODO: Validation
             var_dump($_POST);
             if ($_POST['title'] == '') {
-                $this->addErrorMessage("This is my name is, kukundrela, ale-lela");
+                $this->addErrorMessage("Are you insane? You can't submit a question without title.");
+                return;
+            }
+            if ($_POST['content'] == '') {
+                $this->addErrorMessage("Are you insane? You can't submit a question without content.");
+                return;
+            }
+
+            $questionCreated = $this->db->createQuestion($_POST['title'], $_POST['content'], 1, 1);
+            if ($questionCreated) {
+                $this->addSuccessMessage("You have successfully created a question!");
             }
         }
     }
