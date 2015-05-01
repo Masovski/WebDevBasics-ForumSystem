@@ -1,0 +1,25 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><?php echo $this->title; ?></h3>
+    </div>
+<div class="panel-body">
+    <form class="form-horizontal" role="form" method="post">
+        <div class="form-group">
+            <label for="title" class="col-sm-2 control-label">Title</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="title" name="title" placeholder="Enter question's title here..." value="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="content" class="col-sm-2 control-label">Question</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" rows="4" name="content" placeholder="Enter question's content here..."></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-10 col-sm-offset-2">
+                <input id="submit" name="submit" type="submit" value="Add Question" class="btn btn-primary">
+            </div>
+        </div>
+    </form>
+</div>

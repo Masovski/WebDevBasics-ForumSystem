@@ -1,0 +1,37 @@
+Required:
+Users:
+ - Id - Primary key
+ - Username - not null, unique
+ - Password - not null
+ - Fullname - nullable
+ - Email - not null
+
+Questions:
+ - Id - Primary Key
+ - QuestionTitle - Not Null
+ - QuestionContent - Not Null
+ - Tags (Virtual)
+ - VisitsCount - int - 0 by default
+ - OwnerId - Not Null
+ - CategoryId - Nullable
+QuestionCategories:
+ - Id - Primary key
+ - Name - Not Null
+QuestionUserAnswers
+ - Id - primary key
+ - Text - not null
+ - QuestionId - not null
+ - OwnerId - not null w/ constraint to mydb.Users
+QuestionAnswers
+ - Id - primary key
+ - Text - not null
+ - QuestionId - not null
+ - OwnerId - nullable
+ - AnonymousOwnerName - not null
+ - AnonymousOwnerEmail - Optional
+
+ zend_extension="<Xampp_Home>\php\ext\php_xdebug.dll"
+ xdebug.remote_host=localhost (change 'localhost' to '127.0.0.1')
+ xdebug.remote_enable=0 (change '0' to '1')
+ xdebug.remote_handler="dbgp"
+ xdebug.remote_port=9000
