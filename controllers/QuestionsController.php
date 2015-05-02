@@ -14,11 +14,13 @@ class QuestionsController extends BaseController {
 
     public function view($questionId) {
         $this->question = $this->db->getQuestionDetails($questionId);
+        $this->title = $this->question['title'];
         $this->db->addVisit($questionId);
         $this->tags = $this->db->getTags($questionId);
     }
 
     public function create() {
+        $this->title = 'Create new question';
         if ($this->isPost) {
             var_dump($_POST);
             if ($_POST['title'] == '') {

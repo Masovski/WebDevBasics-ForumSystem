@@ -5,13 +5,12 @@
             </h3>
         </div>
         <div class="panel-body">
-            <?php var_dump($this->question); ?>
             <p class="lead">
-                by <a href="/"><?php echo $this->question['owner_id']; ?></a>
-                | <?php echo $this->question['category_id']; ?>
+                by <a href="/"><?php echo htmlspecialchars($this->question['owner_username']); ?></a>
+                | <?php echo htmlspecialchars($this->question['category_name']); ?>
             </p>
             <p><span class="glyphicon glyphicon-eye-open"></span> <strong><?php echo $this->question['visits']; ?></strong></p>
-            <p><span class="glyphicon glyphicon-time"></span> Posted on <?php echo date('d/m/y', strtotime($this->question['created_at'])); ?></p>
+            <p><span class="glyphicon glyphicon-time"></span> Posted on <?php echo date('d-M-Y \a\t H:m:s', strtotime($this->question['created_at'])); ?></p>
             <hr>
 
             <p><?php echo htmlspecialchars($this->question['content']); ?></p>

@@ -1,7 +1,6 @@
 <?php
+session_start();
 include_once('includes/config.php');
-// Extract the controller, action and parameters from the HTTP request.
-
 $requestParts = explode('/', $_SERVER['REQUEST_URI'], 4);
 
 $controllerName = DEFAULT_CONTROLLER;

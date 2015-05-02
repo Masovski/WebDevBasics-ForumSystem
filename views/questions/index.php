@@ -105,7 +105,7 @@
                     by <a href="/"><?php echo $question['owner_id'] ?></a>
                 </p>
                 <p><span class="glyphicon glyphicon-eye-open"></span> <strong><?php echo $question['visits']; ?></strong></p>
-                <span class="glyphicon glyphicon-time"></span> Posted on <?php echo date('d/m/y', strtotime($question['created_at'])); ?>
+                <span class="glyphicon glyphicon-time"></span> Posted on <?php echo date('d/M/Y', strtotime($question['created_at'])); ?>
             </div>
         </div>
         <hr>
@@ -113,7 +113,7 @@
 
         <!-- Pager -->
         <ul class="pager">
-            &nbsp;<strong>1</strong>&nbsp;<a href="http://masovski.com/TeamDARBY/posts/page/2">2</a><li class="next"><a href="http://masovski.com/TeamDARBY/posts/page/2">Older →</a></li>        </ul>
+            &nbsp;<strong>1</strong>&nbsp;<a href="#">2</a><li class="next"><a href="http://masovski.com/TeamDARBY/posts/page/2">Older →</a></li>        </ul>
 
     </div>
 
