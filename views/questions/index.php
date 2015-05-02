@@ -74,35 +74,26 @@
             </div>
             <!-- /.row -->
         </div>
-        <!-- Side Widget Well -->
-        <div class="well">
-            <h4>Support us</h4>
-            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                <input type="hidden" name="cmd" value="_s-xclick">
-                <input type="hidden" name="hosted_button_id" value="93YL6Q3653M3G">
-                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                <img alt="" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-            </form>
-        </div>
     </div>
 
     <!-- Blog Entries Column -->
     <div class="col-md-8">
-
         <h1 class="page-header">
-            Posts                <!--<small>Secondary Text</small>-->
+            <?php echo $this->title; ?>
+            <!-- Add "Create new" button here -->
         </h1>
         <?php foreach ($this->questions as $question) : ?>
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">
                     <a href="/questions/view/<?php echo $question['id']; ?>">
-                        <?php echo $question['title']; ?></a>
+                        <?php echo htmlspecialchars($question['title']); ?></a>
                 </h3>
             </div>
             <div class="panel-body">
                 <p class="lead">
-                    by <a href="/"><?php echo $question['owner_id'] ?></a>
+                    by <a href="/"><?php echo htmlspecialchars($question['owner_username']); ?></a>
+                    | category - <?php echo htmlspecialchars($question['category_name']); ?>
                 </p>
                 <p><span class="glyphicon glyphicon-eye-open"></span> <strong><?php echo $question['visits']; ?></strong></p>
                 <span class="glyphicon glyphicon-time"></span> Posted on <?php echo date('d/M/Y', strtotime($question['created_at'])); ?>

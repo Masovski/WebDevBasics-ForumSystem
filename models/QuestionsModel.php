@@ -4,7 +4,20 @@
 class QuestionsModel extends BaseModel {
     public function getAll() {
         $statement = self::$db->query(
-            "SELECT * FROM questions ORDER BY id");
+            "SELECT
+                q.id,
+                q.title,
+                q.content,
+                u.username AS owner_username,
+                c.name AS category_name,
+                q.created_at,
+                q.visits
+            FROM questions q
+            JOIN users u
+                ON q.owner_id = u.id
+            JOIN categories c
+                ON q.category_id = c.id
+            ORDER BY created_at DESC");
         return $statement->fetch_all(MYSQLI_ASSOC);
     }
 
@@ -22,9 +35,22 @@ class QuestionsModel extends BaseModel {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    // Not sure if this should be here or I have to make a new instance of CategoriesModel
+    public function getAllCategories() {
+        $statement = self::$db->query("SELECT id, name FROM categories");
+        return $statement->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function getQuestionDetails($questionId) {
         $statement = self::$db->prepare(
-            "SELECT q.id, q.title, q.content, u.username AS owner_username, c.name AS category_name, q.created_at, q.visits
+            "SELECT
+                q.id,
+                q.title,
+                q.content,
+                u.username AS owner_username,
+                c.name AS category_name,
+                q.created_at,
+                q.visits
             FROM questions q
             JOIN users u
                 ON q.owner_id = u.id
@@ -45,8 +71,14 @@ class QuestionsModel extends BaseModel {
         return;
     }
 
-    public function createQuestion($title, $content, $owner_id, $category_id) {
+    public function createQuestion($title, $content, $owner_username, $category_id) {
+        $userStatement = self::$db->prepare(
+            "SELECT id FROM users WHERE username = ?");
+        $userStatement->bind_param("s", $owner_username);
+        $userStatement->execute();
+        $owner_id = $userStatement->get_result()->fetch_assoc()['id'];
         $currentDateTime = date("c");
+
         $statement = self::$db->prepare(
             "INSERT INTO questions (title, content, owner_id, category_id, created_at)
             VALUES (?, ?, ?, ?, ?)");
@@ -59,7 +91,8 @@ class QuestionsModel extends BaseModel {
             $currentDateTime
         );
         $statement->execute();
-        return $statement->affected_rows > 0;
+
+        return $statement->insert_id;
     }
 
     public function editQuestion() {

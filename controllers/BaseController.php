@@ -74,10 +74,12 @@ abstract class BaseController {
         array_push($_SESSION['messages'], array('text' => $msg, 'type' => $type));
     }
 
-    function showMessages() {
-        // TODO: Implement later using noty.
+    function authorize() {
+        if (!$this->isLoggedIn) {
+            $this->addErrorMessage("You should login first");
+            $this->redirect("account", "login");
+        }
     }
-
     function addInfoMessage($msg) {
         $this->addMessage($msg, 'info');
     }

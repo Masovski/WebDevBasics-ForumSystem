@@ -20,21 +20,28 @@ class QuestionsController extends BaseController {
     }
 
     public function create() {
+        $this->authorize();
         $this->title = 'Create new question';
+        $this->categories = $this->db->getAllCategories();
+
         if ($this->isPost) {
-            var_dump($_POST);
-            if ($_POST['title'] == '') {
-                $this->addErrorMessage("Are you insane? You can't submit a question without title.");
+            $title = $_POST['title'];
+            $content = $_POST['content'];
+            $categoryId = $_POST['categoryId'];
+
+            if ($title == '' || strlen($title) < 3) {
+                $this->addErrorMessage("The title should be at least 3 characters long.");
                 return;
             }
-            if ($_POST['content'] == '') {
-                $this->addErrorMessage("Are you insane? You can't submit a question without content.");
+            if ($content == '' || strlen($content) < 10) {
+                $this->addErrorMessage("The question should be at least 10 characters long.");
                 return;
             }
 
-            $questionCreated = $this->db->createQuestion($_POST['title'], $_POST['content'], 1, 1);
+            $questionCreated = $this->db->createQuestion($title, $content, $_SESSION['username'], $categoryId);
             if ($questionCreated) {
                 $this->addSuccessMessage("You have successfully created a question!");
+                $this->redirect("questions", "view", array($questionCreated));
             }
         }
     }

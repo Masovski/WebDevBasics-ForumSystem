@@ -17,8 +17,18 @@
             </div>
         </div>
         <div class="form-group">
+            <label for="category" class="col-sm-2 control-label">Category</label>
+            <div class="col-sm-10">
+                <select name=categoryId id="category" class="form-control">
+                    <?php foreach ($this->categories as $category): ?>
+                    <option value="<?php echo $category['id']; ?>"><?php echo htmlspecialchars($category['name']); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-sm-10 col-sm-offset-2">
-                <input id="submit" name="submit" type="submit" value="Add Question" class="btn btn-primary">
+                <input id="submit" name="submit" type="submit" value="Add Question" class="btn btn-primary btn-block">
             </div>
         </div>
     </form>
