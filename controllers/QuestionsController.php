@@ -16,6 +16,7 @@ class QuestionsController extends BaseController {
     public function view($questionId) {
         $this->question = $this->db->getQuestionDetails($questionId);
         $this->title = $this->question['title'];
+        $this->answers = $this->db->getAnswers($questionId);
         $this->db->addVisit($questionId);
         $this->tags = $this->db->getTags($questionId);
     }
@@ -48,6 +49,26 @@ class QuestionsController extends BaseController {
                 $this->addSuccessMessage("You have successfully created a question!");
                 $this->redirect("questions", "view", array($questionCreated));
             }
+        }
+    }
+
+    public function answer($questionId) {
+        if ($this->isPost) {
+            $anonymousName = $_POST['anonymousName'];
+            $anonymousEmail = $_POST['anonymousEmail'];
+            $answerContent = $_POST['answerContent'];
+
+            if (!$this->isLoggedIn) {
+                $answerCreated = $this->db->createAnonymousAnswer($anonymousName, $answerContent, $anonymousEmail, $questionId);
+            } else {
+                $answerCreated = $this->db->createUserAnswer($answerContent, $questionId, $_SESSION['username']);
+            }
+
+            if ($answerCreated) {
+                $this->addSuccessMessage("You successfully added your comment.");
+            }
+
+            $this->redirect("questions", "view", array($questionId));
         }
     }
 }

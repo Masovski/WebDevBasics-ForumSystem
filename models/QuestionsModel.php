@@ -31,14 +31,53 @@ class QuestionsModel extends BaseModel {
         $statement->bind_param("i", $questionId);
         $statement->execute();
 
-        $result = $statement->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        return $statement->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
     // Not sure if this should be here or I have to make a new instance of CategoriesModel
     public function getAllCategories() {
         $statement = self::$db->query("SELECT id, name FROM categories");
         return $statement->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getAnswers($questionId) {
+        $statement = self::$db->prepare(
+            "SELECT a.text, u.username, a.created_at, a.anonymous_name
+            FROM answers a
+            LEFT JOIN users u
+                ON u.id = a.owner_id
+            JOIN questions q
+                ON q.id = a.question_id AND q.id = ?
+            ORDER BY a.created_at DESC");
+        $statement->bind_param("i", $questionId);
+        $statement->execute();
+
+        return $statement->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function createUserAnswer($content, $questionId, $ownerUsername) {
+        $ownerId = $this->getUserIdByUsername($ownerUsername);
+        $currentDateTime = date("c");
+
+        $statement = self::$db->prepare(
+            "INSERT INTO answers (text, question_id, owner_id, created_at)
+            VALUES (?, ?, ?, ?)");
+        $statement->bind_param("siis", $content, $questionId, $ownerId, $currentDateTime);
+        $statement->execute();
+
+        return $statement->affected_rows > 0;
+    }
+
+    public function createAnonymousAnswer($visitorName, $content, $visitorEmail, $questionId) {
+        $currentDateTime = date("c");
+
+        $statement = self::$db->prepare(
+            "INSERT INTO answers (text, question_id, anonymous_name, anonymous_email, created_at)
+            VALUES (?, ?, ?, ?, ?)");
+        $statement->bind_param("sisss", $content, $questionId, $visitorName, $visitorEmail, $currentDateTime);
+        $statement->execute();
+
+        return $statement->affected_rows > 0;
     }
 
     public function getQuestionDetails($questionId) {
@@ -71,12 +110,8 @@ class QuestionsModel extends BaseModel {
         return;
     }
 
-    public function createQuestion($title, $content, $owner_username, $category_id, $tags) {
-        $userStatement = self::$db->prepare(
-            "SELECT id FROM users WHERE username = ?");
-        $userStatement->bind_param("s", $owner_username);
-        $userStatement->execute();
-        $owner_id = $userStatement->get_result()->fetch_assoc()['id'];
+    public function createQuestion($title, $content, $ownerUsername, $categoryId) {
+        $owner_id = $this->getUserIdByUsername($ownerUsername);
         $currentDateTime = date("c");
 
 
@@ -88,7 +123,7 @@ class QuestionsModel extends BaseModel {
             $title,
             $content,
             $owner_id,
-            $category_id,
+            $categoryId,
             $currentDateTime
         );
         $statement->execute();
@@ -126,5 +161,18 @@ class QuestionsModel extends BaseModel {
             $linkStatement->bind_param("ii", $questionId, $tagId);
             $linkStatement->execute();
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getUserIdByUsername($ownerUsername)
+    {
+        $userStatement = self::$db->prepare(
+            "SELECT id FROM users WHERE username = ?");
+        $userStatement->bind_param("s", $ownerUsername);
+        $userStatement->execute();
+        $owner_id = $userStatement->get_result()->fetch_assoc()['id'];
+        return $owner_id;
     }
 }

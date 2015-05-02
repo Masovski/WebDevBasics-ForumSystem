@@ -35,13 +35,9 @@
                 <div class="col-lg-12 panel-body">
                     <div class="list-group">
                         <?php foreach ($this->categories as $category): ?>
-                        <a href="#" class="list-group-item active">
-                            Cras justo odio
+                        <a href="/search/categories/<?php echo $category['id']; ?>" class="list-group-item">
+                            <?php echo htmlspecialchars($category['name']); ?>
                         </a>
-                        <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-                        <a href="#" class="list-group-item">Morbi leo risus</a>
-                        <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-                        <a href="#" class="list-group-item">Vestibulum at eros</a>
                         <?php endforeach; ?>
                     </div>
                 </div>
