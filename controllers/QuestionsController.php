@@ -10,6 +10,7 @@ class QuestionsController extends BaseController {
 
     public function index() {
         $this->questions = $this->db->getAll();
+        $this->categories = $this->db->getAllCategories();
     }
 
     public function view($questionId) {
@@ -28,6 +29,9 @@ class QuestionsController extends BaseController {
             $title = $_POST['title'];
             $content = $_POST['content'];
             $categoryId = $_POST['categoryId'];
+            $matches = array();
+            preg_match_all('/([a-zA-Z])+/i', $_POST['tags'], $matches, PREG_SPLIT_NO_EMPTY);
+            $tags = $matches[0];
 
             if ($title == '' || strlen($title) < 3) {
                 $this->addErrorMessage("The title should be at least 3 characters long.");
@@ -40,6 +44,7 @@ class QuestionsController extends BaseController {
 
             $questionCreated = $this->db->createQuestion($title, $content, $_SESSION['username'], $categoryId);
             if ($questionCreated) {
+                $this->db->linkQuestionTags($questionCreated, $tags);
                 $this->addSuccessMessage("You have successfully created a question!");
                 $this->redirect("questions", "view", array($questionCreated));
             }

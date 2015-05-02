@@ -9,10 +9,11 @@ class AccountController extends BaseController {
     }
 
     public function index() {
-
+        $this->redirect("questions");
     }
 
     public function register() {
+        $this->hideFromLoggedInUser();
         $this->title = 'Register new account';
         if ($this->isPost) {
             $username = $_POST['username'];
@@ -49,6 +50,7 @@ class AccountController extends BaseController {
     }
 
     public function login() {
+        $this->hideFromLoggedInUser();
         $this->title = 'Login';
         if ($this->isPost) {
             $username = $_POST['username'];
@@ -76,6 +78,7 @@ class AccountController extends BaseController {
     }
 
     public function logout() {
+        $this->authorize();
         unset($_SESSION['username']);
         $this->redirect("questions");
     }

@@ -71,13 +71,14 @@ class QuestionsModel extends BaseModel {
         return;
     }
 
-    public function createQuestion($title, $content, $owner_username, $category_id) {
+    public function createQuestion($title, $content, $owner_username, $category_id, $tags) {
         $userStatement = self::$db->prepare(
             "SELECT id FROM users WHERE username = ?");
         $userStatement->bind_param("s", $owner_username);
         $userStatement->execute();
         $owner_id = $userStatement->get_result()->fetch_assoc()['id'];
         $currentDateTime = date("c");
+
 
         $statement = self::$db->prepare(
             "INSERT INTO questions (title, content, owner_id, category_id, created_at)
@@ -96,10 +97,34 @@ class QuestionsModel extends BaseModel {
     }
 
     public function editQuestion() {
-
+        // TODO
     }
 
     public function deleteQuestion() {
+        // TODO
+    }
 
+    public function linkQuestionTags($questionId, $tags) {
+        foreach ($tags as $tag) {
+            $createTagStatement = self::$db->prepare(
+                "INSERT IGNORE INTO tags SET name=?");
+            $createTagStatement->bind_param("s", $tag);
+            $createTagStatement->execute();
+            $tagId = $createTagStatement->insert_id;
+
+            if($tagId == 0) {
+                $getTagIdStatement = self::$db->prepare(
+                    "SELECT id FROM tags WHERE name = ?");
+                $getTagIdStatement->bind_param("s", $tag);
+                $getTagIdStatement->execute();
+                $tagId = $getTagIdStatement->get_result()->fetch_assoc()['id'];
+            }
+
+            $linkStatement = self::$db->prepare(
+                "INSERT INTO questions_tags (question_id, tag_id)
+                VALUES (?, ?)");
+            $linkStatement->bind_param("ii", $questionId, $tagId);
+            $linkStatement->execute();
+        }
     }
 }

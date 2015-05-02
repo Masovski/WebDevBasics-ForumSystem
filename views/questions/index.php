@@ -27,47 +27,23 @@
         </div>
 
         <!-- Blog Categories Well -->
-        <div class="well">
-            <h4>Posts archive</h4>
-            <div class="row">
-                <div class="col-lg-12">
-                    <ul class="list-unstyled">
-
-                        <li><a href="http://masovski.com/TeamDARBY/posts/archive/2014/8">August 2014</a> <span class="badge">4</span></li>
-
-                        <li><a href="http://masovski.com/TeamDARBY/posts/archive/2014/7">July 2014</a> <span class="badge">2</span></li>
-                    </ul>
-                </div>
-                <!-- /.col-lg-6 -->
-
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Categories</h4>
             </div>
-            <!-- /.row -->
-        </div>
-
-        <div class="well">
-            <h4>Tags cloud</h4>
             <div class="row">
-                <div class="col-lg-12">
-                    <ul class="list-unstyled">
-                        <li><a href="http://masovski.com/TeamDARBY/search/index?searchphrase=skill&amp;search_by=tag">
-                                skill                </a> <span class="badge">2</span></li>
-                        <li><a href="http://masovski.com/TeamDARBY/search/index?searchphrase=programming&amp;search_by=tag">
-                                programming                </a> <span class="badge">2</span></li>
-                        <li><a href="http://masovski.com/TeamDARBY/search/index?searchphrase=veselin&amp;search_by=tag">
-                                veselin                </a> <span class="badge">1</span></li>
-                        <li><a href="http://masovski.com/TeamDARBY/search/index?searchphrase=special treatment&amp;search_by=tag">
-                                special treatment                </a> <span class="badge">1</span></li>
-                        <li><a href="http://masovski.com/TeamDARBY/search/index?searchphrase=marinov&amp;search_by=tag">
-                                marinov                </a> <span class="badge">1</span></li>
-                        <li><a href="http://masovski.com/TeamDARBY/search/index?searchphrase=technology&amp;search_by=tag">
-                                technology                </a> <span class="badge">1</span></li>
-                        <li><a href="http://masovski.com/TeamDARBY/search/index?searchphrase=language&amp;search_by=tag">
-                                language                </a> <span class="badge">1</span></li>
-                        <li><a href="http://masovski.com/TeamDARBY/search/index?searchphrase=IDE&amp;search_by=tag">
-                                IDE                </a> <span class="badge">1</span></li>
-                        <li><a href="http://masovski.com/TeamDARBY/search/index?searchphrase=specialists&amp;search_by=tag">
-                                specialists                </a> <span class="badge">1</span></li>
-                    </ul>
+                <div class="col-lg-12 panel-body">
+                    <div class="list-group">
+                        <?php foreach ($this->categories as $category): ?>
+                        <a href="#" class="list-group-item active">
+                            Cras justo odio
+                        </a>
+                        <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+                        <a href="#" class="list-group-item">Morbi leo risus</a>
+                        <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+                        <a href="#" class="list-group-item">Vestibulum at eros</a>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
                 <!-- /.col-lg-6 -->
 
@@ -80,7 +56,7 @@
     <div class="col-md-8">
         <h1 class="page-header">
             <?php echo $this->title; ?>
-            <!-- Add "Create new" button here -->
+            <a href="/questions/create"><button class="btn btn-primary btn-lg">Create New</button></a>
         </h1>
         <?php foreach ($this->questions as $question) : ?>
         <div class="panel panel-primary">
@@ -93,7 +69,7 @@
             <div class="panel-body">
                 <p class="lead">
                     by <a href="/"><?php echo htmlspecialchars($question['owner_username']); ?></a>
-                    | category - <?php echo htmlspecialchars($question['category_name']); ?>
+                    | <?php echo htmlspecialchars($question['category_name']); ?>
                 </p>
                 <p><span class="glyphicon glyphicon-eye-open"></span> <strong><?php echo $question['visits']; ?></strong></p>
                 <span class="glyphicon glyphicon-time"></span> Posted on <?php echo date('d/M/Y', strtotime($question['created_at'])); ?>

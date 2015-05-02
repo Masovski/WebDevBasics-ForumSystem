@@ -27,6 +27,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label for="tags" class="col-sm-2 control-label">Tags</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="tags" name="tags" placeholder="Enter tags, seperated by whatever you want..." value="">
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-sm-10 col-sm-offset-2">
                 <input id="submit" name="submit" type="submit" value="Add Question" class="btn btn-primary btn-block">
             </div>

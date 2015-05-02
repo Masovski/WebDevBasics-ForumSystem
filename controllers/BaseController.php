@@ -80,6 +80,13 @@ abstract class BaseController {
             $this->redirect("account", "login");
         }
     }
+
+    function hideFromLoggedInUser() {
+        if ($this->isLoggedIn) {
+            $this->redirect(DEFAULT_CONTROLLER);
+        }
+    }
+
     function addInfoMessage($msg) {
         $this->addMessage($msg, 'info');
     }
