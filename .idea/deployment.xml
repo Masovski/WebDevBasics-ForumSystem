@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="LAMP ForumSystem Apache">
+  <component name="PublishConfigData" serverName="XAMPP Local">
     <serverData>
-      <paths name="LAMP ForumSystem Apache">
+      <paths name="XAMPP Local">
         <serverdata>
           <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="\" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

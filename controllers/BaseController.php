@@ -15,7 +15,7 @@ abstract class BaseController {
             $this->isPost = true;
         }
 
-        if (isset($_SESSION['username'])) {
+        if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
             $this->isLoggedIn = true;
         }
 
@@ -97,5 +97,12 @@ abstract class BaseController {
 
     function addSuccessMessage($msg) {
         $this->addMessage($msg, 'success');
+    }
+
+    function validateInputLength($input, $minLength, $errorMessage) {
+        if (strlen($input) < $minLength) {
+            $this->addErrorMessage($errorMessage);
+            $this->redirectToUrl($_SERVER['HTTP_REFERER']);
+        }
     }
 }

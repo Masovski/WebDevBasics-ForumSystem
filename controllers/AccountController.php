@@ -37,8 +37,10 @@ class AccountController extends BaseController {
                 return;
             }
 
-            $isRegistered = $this->db->register($username, $password, $email);
-            if ($isRegistered) {
+            $registeredUserId = $this->db->register($username, $password, $email);
+            // This is zero if it can't register
+            if ($registeredUserId) {
+                $_SESSION['id'] = $registeredUserId;
                 $_SESSION['username'] = $username;
                 $this->addSuccessMessage("Registration successful!");
                 $this->redirect("questions");
@@ -65,8 +67,9 @@ class AccountController extends BaseController {
                 return;
             }
 
-            $isLoggedIn = $this->db->login($username, $password);
-            if ($isLoggedIn) {
+            $loggedInUserId = $this->db->login($username, $password);
+            if ($loggedInUserId) {
+                $_SESSION['id'] = $loggedInUserId;
                 $_SESSION['username'] = $username;
                 $this->addSuccessMessage("You got in. Nice one, little hacker.");
                 $this->redirect("questions");

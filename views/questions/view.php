@@ -19,8 +19,8 @@
 
         <p><?php echo htmlspecialchars($this->question['content']); ?></p>
         <?php foreach ($this->tags as $tag) : ?>
-            <a href="/search/tags/<?php echo $tag['name']; ?>">
-                <span class="label label-info"><?php echo htmlspecialchars($tag['name']); ?></span>
+            <a href="/search/tags/<?php echo strtolower($tag['name']); ?>">
+                <span class="label label-info"><?php echo htmlspecialchars(strtolower($tag['name'])); ?></span>
             </a>
         <?php endforeach; ?>
 
@@ -32,12 +32,15 @@
     <h4>Leave a Comment:</h4>
 
     <form role="form" method="post" action="/questions/answer/<?php echo $this->question['id']; ?>">
+        <?php if (!$this->isLoggedIn): ?>
         <div class="form-group">
+
             <input type="text" name="anonymousName" class="form-control" placeholder="Full name"
                    style="display: inline; max-width: 250px" required="required">
             <input type="text" name="anonymousEmail" class="form-control" placeholder="Email"
                    style="display: inline; max-width: 250px">
         </div>
+        <?php endif; ?>
         <div class="form-group">
             <textarea class="form-control" rows="3" name="answerContent" required="required"></textarea>
         </div>

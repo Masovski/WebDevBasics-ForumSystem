@@ -1,51 +1,55 @@
 <?php
 
 class QuestionsController extends BaseController {
-    private $db;
+    private $questionsDao;
+    private $categoriesDao;
+    private $answersDao;
+    private $tagsDao;
 
     public function onInit() {
         $this->title = "Questions";
-        $this->db = new QuestionsModel();
+        $this->questionsDao = new QuestionsModel();
+        $this->categoriesDao = new CategoriesModel();
+        $this->answersDao = new AnswersModel();
+        $this->tagsDao = new TagsModel();
     }
 
     public function index() {
-        $this->questions = $this->db->getAll();
-        $this->categories = $this->db->getAllCategories();
+        $this->questions = $this->questionsDao->getAll();
+        $this->categories = $this->categoriesDao->getAll();
     }
 
     public function view($questionId) {
-        $this->question = $this->db->getQuestionDetails($questionId);
+        $this->question = $this->questionsDao->getQuestionDetails($questionId);
         $this->title = $this->question['title'];
-        $this->answers = $this->db->getAnswers($questionId);
-        $this->db->addVisit($questionId);
-        $this->tags = $this->db->getTags($questionId);
+        $this->answers = $this->answersDao->getAll($questionId);
+        $this->questionsDao->addVisit($questionId);
+        $this->tags = $this->tagsDao->getAll($questionId);
     }
 
     public function create() {
         $this->authorize();
         $this->title = 'Create new question';
-        $this->categories = $this->db->getAllCategories();
+        $this->categories = $this->categoriesDao->getAll();
 
         if ($this->isPost) {
             $title = $_POST['title'];
             $content = $_POST['content'];
             $categoryId = $_POST['categoryId'];
-            $matches = array();
-            preg_match_all('/([a-zA-Z])+/i', $_POST['tags'], $matches, PREG_SPLIT_NO_EMPTY);
-            $tags = $matches[0];
+            $tagMatches = array();
+            preg_match_all('/([a-zA-Z])+/i', $_POST['tags'], $tagMatches, PREG_SPLIT_NO_EMPTY);
 
-            if ($title == '' || strlen($title) < 3) {
-                $this->addErrorMessage("The title should be at least 3 characters long.");
-                return;
-            }
-            if ($content == '' || strlen($content) < 10) {
-                $this->addErrorMessage("The question should be at least 10 characters long.");
+            if (count($tagMatches[0]) < 1) {
+                $this->addErrorMessage("Questions must have tags.");
                 return;
             }
 
-            $questionCreated = $this->db->createQuestion($title, $content, $_SESSION['username'], $categoryId);
+            $this->validateInputLength($title, 3, "The title should be at least 3 characters long.");
+            $this->validateInputLength($content, 10, "The question should be at least 10 characters long.");
+
+            $questionCreated = $this->questionsDao->createQuestion($title, $content, $_SESSION['id'], $categoryId);
             if ($questionCreated) {
-                $this->db->linkQuestionTags($questionCreated, $tags);
+                $this->tagsDao->linkToQuestion($questionCreated, $tagMatches[0]);
                 $this->addSuccessMessage("You have successfully created a question!");
                 $this->redirect("questions", "view", array($questionCreated));
             }
@@ -54,21 +58,40 @@ class QuestionsController extends BaseController {
 
     public function answer($questionId) {
         if ($this->isPost) {
-            $anonymousName = $_POST['anonymousName'];
-            $anonymousEmail = $_POST['anonymousEmail'];
+            if (isset($_POST['anonymousName']) && $_POST['anonymousEmail']) {
+                $anonymousName = $_POST['anonymousName'];
+                $anonymousEmail = $_POST['anonymousEmail'];
+
+                $this->validateInputLength($anonymousName, 2, "Your name should be at least 2 characters long.");
+                $this->validateInputLength($anonymousEmail, 8, "Your email should be at least 8 characters long.");
+            }
+
+            $this->validateInputLength(
+                $_POST['answerContent'],
+                2,
+                "Your answer should be at least 2 characters long");
             $answerContent = $_POST['answerContent'];
 
             if (!$this->isLoggedIn) {
-                $answerCreated = $this->db->createAnonymousAnswer($anonymousName, $answerContent, $anonymousEmail, $questionId);
+                $answerCreated = $this->answersDao->createAnonymousAnswer($anonymousName, $answerContent, $anonymousEmail, $questionId);
             } else {
-                $answerCreated = $this->db->createUserAnswer($answerContent, $questionId, $_SESSION['username']);
+                $answerCreated = $this->answersDao->createUserAnswer($answerContent, $questionId, $_SESSION['id']);
             }
 
             if ($answerCreated) {
                 $this->addSuccessMessage("You successfully added your comment.");
+            } else {
+                $this->addErrorMessage("Oops! Something went wrong while adding your comment. Try again later.");
             }
 
             $this->redirect("questions", "view", array($questionId));
         }
+    }
+
+    // Show questions by category
+    public function categories($categoryId) {
+        $this->questions = $this->questionsDao->getByCategory($categoryId);
+        $this->categories = $this->categoriesDao->getAll();
+        $this->renderView('index');
     }
 }

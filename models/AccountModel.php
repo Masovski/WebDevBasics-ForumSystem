@@ -27,20 +27,20 @@ class AccountModel extends BaseModel {
             $registerDateTime);
         $registerStatement->execute();
 
-        return true;
+        return $registerStatement->insert_id;
     }
 
     public function login($username, $password) {
         // Get the user from the database.
         $statement = self::$db->prepare(
-            "SELECT username, password_hashed, password_salt FROM users WHERE username = ?");
+            "SELECT id, username, password_hashed, password_salt FROM users WHERE username = ?");
         $statement->bind_param("s", $username);
         $statement->execute();
         $result = $statement->get_result()->fetch_assoc();
 
         // Check user's password and return true if correct
         if (password_verify($password . $result['password_salt'], $result['password_hashed'])) {
-            return true;
+            return $result['id'];
         }
 
         return false;

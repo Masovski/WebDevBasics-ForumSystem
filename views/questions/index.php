@@ -35,8 +35,9 @@
                 <div class="col-lg-12 panel-body">
                     <div class="list-group">
                         <?php foreach ($this->categories as $category): ?>
-                        <a href="/search/categories/<?php echo $category['id']; ?>" class="list-group-item">
+                        <a href="/questions/categories/<?php echo $category['id']; ?>" class="list-group-item">
                             <?php echo htmlspecialchars($category['name']); ?>
+                            <span class="badge"><?php echo $category['questions_count']; ?></span>
                         </a>
                         <?php endforeach; ?>
                     </div>
