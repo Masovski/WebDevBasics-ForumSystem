@@ -88,7 +88,7 @@ class QuestionsController extends BaseController {
         }
     }
 
-    // Show questions by category
+    // Search questions by category
     public function categories($categoryId) {
         $this->questions = $this->questionsDao->getByCategory($categoryId);
         $this->categories = $this->categoriesDao->getAll();

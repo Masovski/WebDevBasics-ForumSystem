@@ -41,8 +41,80 @@ class QuestionsModel extends BaseModel {
         return $statement->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getByTag($tagId) {
+    public function getAllByTag($tagName) {
+        $statement = self::$db->prepare(
+            "SELECT DISTINCT
+                q.id,
+                q.title,
+                q.content,
+                u.username AS owner_username,
+                c.name AS category_name,
+                q.created_at,
+                q.visits
+            FROM questions q
+                JOIN questions_tags qt
+                    ON qt.question_id = q.id
+                JOIN tags t
+                    ON qt.tag_id = t.id AND t.name = ?
+                JOIN users u
+                    ON q.owner_id = u.id
+                JOIN categories c
+                    ON q.category_id = c.id
+            ORDER BY q.created_at DESC, q.id DESC");
+        $statement->bind_param('s', $tagName);
+        $statement->execute();
 
+        return $statement->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getAllByQuestionTitle($questionTitle) {
+        $questionTitleQueryParam = '%' . $questionTitle . '%';
+        $statement = self::$db->prepare(
+            "SELECT DISTINCT
+                q.id,
+                q.title,
+                q.content,
+                u.username AS owner_username,
+                c.name AS category_name,
+                q.created_at,
+                q.visits
+            FROM questions q
+            JOIN users u
+                ON q.owner_id = u.id
+            JOIN categories c
+                ON q.category_id = c.id
+            WHERE q.title LIKE ?
+            ORDER BY created_at DESC, q.id DESC");
+        $statement->bind_param('s', $questionTitleQueryParam);
+        $statement->execute();
+
+        return $statement->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getAllByAnswerContent($answerContent) {
+        $answerContentQueryParam = '%' . $answerContent . '%';
+        $statement = self::$db->prepare(
+            "SELECT DISTINCT
+                q.id,
+                q.title,
+                q.content,
+                u.username AS owner_username,
+                c.name AS category_name,
+                q.created_at,
+                q.visits
+            FROM questions q
+            JOIN users u
+                ON q.owner_id = u.id
+            JOIN categories c
+                ON q.category_id = c.id
+            JOIN answers a
+              ON a.question_id = q.id
+            WHERE a.text LIKE ?
+            ORDER BY created_at DESC, q.id DESC");
+        $statement->bind_param('s', $answerContentQueryParam);
+        $statement->execute();
+
+        return $statement->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getQuestionDetails($questionId) {

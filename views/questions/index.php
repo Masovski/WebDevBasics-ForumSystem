@@ -1,12 +1,13 @@
 <div class="row">
-    <!-- Blog Sidebar Widgets Column -->
+    <!-- Forum Sidebar Column -->
     <div class="col-md-4">
-        <!-- Blog Search Well -->
+        <!-- Forum Search Well -->
         <div class="well">
-            <form method="get" action="http://masovski.com/TeamDARBY/search/index" autocomplete="off">
-                <h4>Blog Search</h4>
+            <!-- It's usually better to use GET method here -->
+            <form method="POST" action="/search/" autocomplete="off">
+                <h4>Forum Search</h4>
                 <div class="input-group">
-                    <input name="searchphrase" type="text" class="form-control" value="">
+                    <input name="searchPhrase" type="text" class="form-control" value="">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="submit">
                         <span class="glyphicon glyphicon-search"></span>
@@ -17,11 +18,15 @@
                 <h4>Search by:</h4>
                 <label>
                     Tag
-                    <input type="radio" name="search_by" value="tag" checked="checked">
+                    <input type="radio" name="searchBy" value="tag" checked="checked">
                 </label>
                 <label>
-                    Content
-                    <input type="radio" name="search_by" value="content">
+                    Question
+                    <input type="radio" name="searchBy" value="questionTitle">
+                </label>
+                <label>
+                    Answer
+                    <input type="radio" name="searchBy" value="answerContent">
                 </label>
             </form>
         </div>
@@ -42,14 +47,11 @@
                         <?php endforeach; ?>
                     </div>
                 </div>
-                <!-- /.col-lg-6 -->
-
             </div>
-            <!-- /.row -->
         </div>
     </div>
 
-    <!-- Blog Entries Column -->
+    <!-- Forum Questions Column -->
     <div class="col-md-8">
         <h1 class="page-header">
             <?php echo $this->title; ?>
@@ -77,7 +79,7 @@
 
         <!-- Pager -->
         <ul class="pager">
-            &nbsp;<strong>1</strong>&nbsp;<a href="#">2</a><li class="next"><a href="http://masovski.com/TeamDARBY/posts/page/2">Older →</a></li>        </ul>
+            &nbsp;<strong>1</strong>&nbsp;<a href="#">2</a><li class="next"><a href="#">Older →</a></li>        </ul>
 
     </div>
 

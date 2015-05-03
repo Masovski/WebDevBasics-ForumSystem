@@ -30,12 +30,15 @@ abstract class BaseController {
         // Implement the default action in the subclasses
     }
 
-    public function renderView($viewName = null, $includeLayout = true) {
+    public function renderView($viewName = null, $controllerName = null, $includeLayout = true) {
         if (!$this->isViewRendered) {
             if ($viewName == null) {
                 $viewName = $this->actionName;
             }
-            $viewFileName = 'views/' . $this->controllerName . '/' . $viewName . '.php';
+            if ($controllerName == null) {
+                $controllerName = $this->controllerName;
+            }
+            $viewFileName = 'views/' . $controllerName . '/' . $viewName . '.php';
             if ($includeLayout) {
                 $headerViewFile = 'views/layouts/' . $this->layoutName . '/header.php';
 
