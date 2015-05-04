@@ -3,7 +3,7 @@
 **Required** functionalities:
 
 - User registration / login and user profiles. - **[done]**
-- **View** all questions / categories (optionally with paging). - **[done]**
+- **View** all questions / categories (optionally with paging). - **[done without paging]**
 - Implement a simple **registration** for forum users. - **[done]**
 - Adding **new question** by the forum users. Each question must have **tags** and **category**. - **[done]**
 - Implement **categories** for the forum questions. - **[done]**
