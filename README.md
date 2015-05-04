@@ -25,4 +25,5 @@
 **Warning!** > You have to **enable** the **mcrypt** extension and **mysqlnd** module in PHP.
 
 **Step 1** - Copy the files to the root directory of your web server.
+
 **Step 2** - Import forum-system.sql into MySQL.
