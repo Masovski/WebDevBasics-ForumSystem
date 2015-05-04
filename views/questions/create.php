@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-sm-10 col-sm-offset-2"><?php var_dump($_SESSION['formToken']); var_dump($_POST['formToken']);?>
+            <div class="col-sm-10 col-sm-offset-2">
                 <input type="hidden" name="formToken" value="<?php echo $_SESSION['formToken']; ?>" />
                 <input id="submit" name="submit" type="submit" value="Add Question" class="btn btn-primary btn-block">
             </div>

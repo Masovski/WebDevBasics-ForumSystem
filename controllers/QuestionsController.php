@@ -64,8 +64,6 @@ class QuestionsController extends BaseController {
     }
 
     public function answer($questionId) {
-        $_SESSION['formToken'] = uniqid(mt_rand(), true);
-
         if ($this->isPost) {
             if (!isset($_POST['formToken']) || $_POST['formToken'] != $_SESSION['formToken']) {
                 throw new Exception('Invalid request!');
