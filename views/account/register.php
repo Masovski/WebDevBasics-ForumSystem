@@ -28,6 +28,7 @@
                     <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
                 </div>
             </div>
+            <input type="hidden" name="formToken" value="<?php echo $_SESSION['formToken']; ?>" />
             <input type="submit" name="submit" id="submit" value="Register" class="btn btn-info btn-block">
         </div>
     </form>

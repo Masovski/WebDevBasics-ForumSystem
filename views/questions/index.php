@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" xmlns="http://www.w3.org/1999/html">
     <!-- Forum Sidebar Column -->
     <div class="col-md-4">
         <!-- Forum Search Well -->
@@ -56,7 +56,13 @@
         <h1 class="page-header">
             <?php echo $this->title; ?>
             <a href="/questions/create"><button class="btn btn-primary btn-lg">Create New</button></a>
+            <a href="/questions"><button class="btn btn-primary btn-lg">See All</button></a>
         </h1>
+        <?php if (count($this->questions) < 1): ?>
+            <h2>
+                No results.
+            </h2>
+        <?php else: ?>
         <?php foreach ($this->questions as $question) : ?>
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -68,19 +74,18 @@
             <div class="panel-body">
                 <p class="lead">
                     by <a href="/"><?php echo htmlspecialchars($question['owner_username']); ?></a>
-                    | <?php echo htmlspecialchars($question['category_name']); ?>
+                    | <a href="/questions/categories/<?php echo $question['category_id']; ?>">
+                        <?php echo htmlspecialchars($question['category_name']); ?></a>
+                    | <span class="glyphicon glyphicon-time"></span>
+                    Posted on <?php echo date('d/M/Y', strtotime($question['created_at'])); ?>
                 </p>
-                <p><span class="glyphicon glyphicon-eye-open"></span> <strong><?php echo $question['visits']; ?></strong></p>
-                <span class="glyphicon glyphicon-time"></span> Posted on <?php echo date('d/M/Y', strtotime($question['created_at'])); ?>
+                <h4><span class="glyphicon glyphicon-eye-open"></span>
+                    <strong><?php echo $question['visits']; ?></strong>
+                    | <span >Answers: <?php echo $question['answers_count']; ?></span>
+                </h4>
             </div>
         </div>
         <hr>
-        <?php endforeach; ?>
-
-        <!-- Pager -->
-        <ul class="pager">
-            &nbsp;<strong>1</strong>&nbsp;<a href="#">2</a><li class="next"><a href="#">Older →</a></li>        </ul>
-
+        <?php endforeach; endif; ?>
     </div>
-
 </div>

@@ -15,23 +15,21 @@ class AccountController extends BaseController {
     public function register() {
         $this->hideFromLoggedInUser();
         $this->title = 'Register new account';
+
         if ($this->isPost) {
+            if (!isset($_POST['formToken']) || $_POST['formToken'] != $_SESSION['formToken']) {
+                throw new Exception('Invalid request!');
+                exit;
+            }
+
             $username = $_POST['username'];
             $password = $_POST['password'];
             $email = $_POST['email'];
 
             // TODO: Fields validation.
-            if ($username == '') {
-                $this->addErrorMessage("Username cannot be blank");
-            }
-
-            if ($password == '') {
-                $this->addErrorMessage("Password cannot be blank");
-            }
-
-            if ($email == '') {
-                $this->addErrorMessage("Email cannot be blank");
-            }
+            $this->validateInputLength($username, 3, "Username should be at least 3 characters long.");
+            $this->validateInputLength($password, 8, "Username should be at least 8 characters long.");
+            $this->validateInputLength($email, 7, "Username should be at least 4 characters long.");
 
             if (isset($_SESSION['messages'])) {
                 return;
@@ -49,6 +47,8 @@ class AccountController extends BaseController {
                 $this->redirect("account", "register");
             }
         }
+
+        $_SESSION['formToken'] = uniqid(mt_rand(), true);
     }
 
     public function login() {

@@ -7,7 +7,8 @@
     <div class="panel-body">
         <p class="lead">
             by <a href="/"><?php echo htmlspecialchars($this->question['owner_username']); ?></a>
-            | <?php echo htmlspecialchars($this->question['category_name']); ?>
+            | <a href="/questions/categories/<?php echo $this->question['category_id']; ?>">
+                <?php echo htmlspecialchars($this->question['category_name']); ?></a>
         </p>
 
         <p><span class="glyphicon glyphicon-eye-open"></span> <strong><?php echo $this->question['visits']; ?></strong>
@@ -19,7 +20,7 @@
 
         <p><?php echo htmlspecialchars($this->question['content']); ?></p>
         <?php foreach ($this->tags as $tag) : ?>
-            <a href="/search/tags/<?php echo strtolower($tag['name']); ?>">
+            <a href="/search/tag/<?php echo strtolower($tag['name']); ?>">
                 <span class="label label-info"><?php echo htmlspecialchars(strtolower($tag['name'])); ?></span>
             </a>
         <?php endforeach; ?>
@@ -44,6 +45,7 @@
         <div class="form-group">
             <textarea class="form-control" rows="3" name="answerContent" required="required"></textarea>
         </div>
+        <input type="hidden" name="formToken" value="<?php echo $_SESSION['formToken']; ?>" />
         <button type="submit" class="btn btn-primary">Add comment</button>
     </form>
 </div>
@@ -51,6 +53,9 @@
 <hr>
 
 <!-- Posted comments -->
+<h1 class="page-header">
+    <?php echo $this->question['answers_count']; ?> Answers
+</h1>
 <?php foreach ($this->answers as $answer): ?>
     <div class="row">
         <div class="col-md-2 col-sm-2 hidden-xs">

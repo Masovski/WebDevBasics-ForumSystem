@@ -8,13 +8,18 @@ class QuestionsModel extends BaseModel {
                 q.content,
                 u.username AS owner_username,
                 c.name AS category_name,
+                q.category_id,
                 q.created_at,
-                q.visits
+                q.visits,
+                COUNT(a.id) AS answers_count
             FROM questions q
             JOIN users u
                 ON q.owner_id = u.id
             JOIN categories c
                 ON q.category_id = c.id
+            LEFT JOIN answers a
+                ON a.question_id = q.id
+            GROUP BY q.id
             ORDER BY q.created_at DESC, q.id DESC");
         return $statement->fetch_all(MYSQLI_ASSOC);
     }
@@ -27,13 +32,18 @@ class QuestionsModel extends BaseModel {
                 q.content,
                 u.username AS owner_username,
                 c.name AS category_name,
+                q.category_id,
                 q.created_at,
-                q.visits
+                q.visits,
+                COUNT(a.id) AS answers_count
             FROM questions q
             JOIN users u
                 ON q.owner_id = u.id
             JOIN categories c
                 ON q.category_id = c.id AND c.id = ?
+            LEFT JOIN answers a
+                ON a.question_id = q.id
+            GROUP BY q.id
             ORDER BY created_at DESC, q.id DESC");
         $statement->bind_param('i', $categoryId);
         $statement->execute();
@@ -49,17 +59,22 @@ class QuestionsModel extends BaseModel {
                 q.content,
                 u.username AS owner_username,
                 c.name AS category_name,
+                q.category_id,
                 q.created_at,
-                q.visits
+                q.visits,
+                COUNT(a.id) AS answers_count
             FROM questions q
-                JOIN questions_tags qt
-                    ON qt.question_id = q.id
-                JOIN tags t
-                    ON qt.tag_id = t.id AND t.name = ?
-                JOIN users u
-                    ON q.owner_id = u.id
-                JOIN categories c
-                    ON q.category_id = c.id
+            JOIN questions_tags qt
+                ON qt.question_id = q.id
+            JOIN tags t
+                ON qt.tag_id = t.id AND t.name = ?
+            JOIN users u
+                ON q.owner_id = u.id
+            JOIN categories c
+                ON q.category_id = c.id
+            LEFT JOIN answers a
+                ON a.question_id = q.id
+            GROUP BY q.id
             ORDER BY q.created_at DESC, q.id DESC");
         $statement->bind_param('s', $tagName);
         $statement->execute();
@@ -76,14 +91,19 @@ class QuestionsModel extends BaseModel {
                 q.content,
                 u.username AS owner_username,
                 c.name AS category_name,
+                q.category_id,
                 q.created_at,
-                q.visits
+                q.visits,
+                COUNT(a.id) AS answers_count
             FROM questions q
             JOIN users u
                 ON q.owner_id = u.id
             JOIN categories c
                 ON q.category_id = c.id
+            LEFT JOIN answers a
+                ON a.question_id = a.id
             WHERE q.title LIKE ?
+            GROUP BY q.id
             ORDER BY created_at DESC, q.id DESC");
         $statement->bind_param('s', $questionTitleQueryParam);
         $statement->execute();
@@ -100,8 +120,10 @@ class QuestionsModel extends BaseModel {
                 q.content,
                 u.username AS owner_username,
                 c.name AS category_name,
+                q.category_id,
                 q.created_at,
-                q.visits
+                q.visits,
+                COUNT(a.id) AS answers_count
             FROM questions q
             JOIN users u
                 ON q.owner_id = u.id
@@ -110,6 +132,7 @@ class QuestionsModel extends BaseModel {
             JOIN answers a
               ON a.question_id = q.id
             WHERE a.text LIKE ?
+            GROUP BY q.id
             ORDER BY created_at DESC, q.id DESC");
         $statement->bind_param('s', $answerContentQueryParam);
         $statement->execute();
@@ -125,14 +148,19 @@ class QuestionsModel extends BaseModel {
                 q.content,
                 u.username AS owner_username,
                 c.name AS category_name,
+                q.category_id,
                 q.created_at,
-                q.visits
+                q.visits,
+                COUNT(a.id) AS answers_count
             FROM questions q
             JOIN users u
                 ON q.owner_id = u.id
             JOIN categories c
                 ON q.category_id = c.id
-            WHERE q.id = ?");
+            LEFT JOIN answers a
+                ON a.question_id = q.id
+            WHERE q.id = ?
+            GROUP BY q.id");
         $statement->bind_param("i", $questionId);
         $statement->execute();
 
@@ -163,13 +191,5 @@ class QuestionsModel extends BaseModel {
         $statement->execute();
 
         return $statement->insert_id;
-    }
-
-    public function editQuestion() {
-        // TODO
-    }
-
-    public function deleteQuestion() {
-        // TODO
     }
 }

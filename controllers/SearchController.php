@@ -5,6 +5,7 @@ class SearchController extends BaseController {
     private $tagsDao;
 
     public function onInit() {
+        $this->title = 'Search questions';
         $this->questionsDao = new QuestionsModel();
         $this->categoriesDao = new CategoriesModel();
         $this->tagsDao = new TagsModel();
@@ -22,13 +23,13 @@ class SearchController extends BaseController {
 
             switch($searchBy) {
                 case 'tag':
-                    $this->tag($searchPhrase);
+                    $this->redirect('search', 'tag', array($searchPhrase));
                     break;
                 case 'questionTitle':
-                    $this->question($searchPhrase);
+                    $this->redirect('search', 'question', array($searchPhrase));
                     break;
                 case 'answerContent':
-                    $this->answer($searchPhrase);
+                    $this->redirect('search', 'answer', array($searchPhrase));
                     break;
                 default:
                     $this->addErrorMessage("Invalid search option.");

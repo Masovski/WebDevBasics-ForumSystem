@@ -33,6 +33,11 @@ class QuestionsController extends BaseController {
         $this->categories = $this->categoriesDao->getAll();
 
         if ($this->isPost) {
+            if (!isset($_POST['formToken']) || $_POST['formToken'] != $_SESSION['formToken']) {
+                throw new Exception('Invalid request!');
+                exit;
+            }
+
             $title = $_POST['title'];
             $content = $_POST['content'];
             $categoryId = $_POST['categoryId'];
@@ -54,10 +59,18 @@ class QuestionsController extends BaseController {
                 $this->redirect("questions", "view", array($questionCreated));
             }
         }
+
+        $_SESSION['formToken'] = uniqid(mt_rand(), true);
     }
 
     public function answer($questionId) {
+        $_SESSION['formToken'] = uniqid(mt_rand(), true);
+
         if ($this->isPost) {
+            if (!isset($_POST['formToken']) || $_POST['formToken'] != $_SESSION['formToken']) {
+                throw new Exception('Invalid request!');
+                exit;
+            }
             if (isset($_POST['anonymousName']) && $_POST['anonymousEmail']) {
                 $anonymousName = $_POST['anonymousName'];
                 $anonymousEmail = $_POST['anonymousEmail'];
@@ -86,6 +99,8 @@ class QuestionsController extends BaseController {
 
             $this->redirect("questions", "view", array($questionId));
         }
+
+        $_SESSION['formToken'] = uniqid(mt_rand(), true);
     }
 
     // Search questions by category
