@@ -16,3 +16,6 @@
 - **Admin panel** : add /edit /delete forum posts, tags, answers, categories. - **[not done]**
 - Functionality for **searching** by question, answer and tags. - **[done]**
 - Implement **ranking** according to user activity. - **[not done]**
+
+**Security**:
+- Fully protected from XSS, SQL Injection and CSRF.
